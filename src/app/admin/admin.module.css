@@ -1,0 +1,54 @@
+.page { padding: 40px 0 80px; }
+.header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+
+.tabs {
+  display: flex; gap: 4px; margin-bottom: 32px;
+  padding: 4px; background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg); width: fit-content;
+}
+
+.tab {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 20px; font-size: 0.9rem; font-weight: 600;
+  color: var(--text-muted); border-radius: var(--radius-md);
+  transition: all var(--transition-fast); cursor: pointer;
+  background: none; border: none;
+}
+.tab:hover { color: var(--text-primary); }
+.tabActive {
+  background: var(--gradient-primary) !important; color: white !important;
+  box-shadow: var(--shadow-glow);
+}
+
+.statsGrid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 32px;
+}
+.statCard {
+  display: flex; align-items: center; gap: 16px; padding: 24px;
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg); transition: all var(--transition-base);
+}
+.statCard:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+.statCardIcon {
+  width: 48px; height: 48px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+}
+.statCardValue { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem; }
+.statCardLabel { font-size: 0.8rem; color: var(--text-muted); }
+
+.dashGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+.barWrap { display: flex; align-items: center; gap: 10px; }
+.bar {
+  height: 8px; border-radius: 4px; background: var(--gradient-primary);
+  min-width: 20px; max-width: 150px;
+}
+
+@media (max-width: 1024px) {
+  .statsGrid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .statsGrid { grid-template-columns: repeat(2, 1fr); }
+  .dashGrid { grid-template-columns: 1fr; }
+  .tabs { width: 100%; overflow-x: auto; }
+}

@@ -1,0 +1,24 @@
+.page { padding: 40px 0 80px; }
+.header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+
+.statsGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.statCard {
+  display: flex; align-items: center; gap: 14px; padding: 20px;
+  background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg);
+}
+.statIcon { font-size: 1.5rem; }
+.statNum { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--primary-300); }
+.statLabel { font-size: 0.8rem; color: var(--text-muted); }
+
+.orderRow {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; background: var(--bg-glass); border: 1px solid var(--border-color);
+  border-radius: var(--radius-md); transition: all var(--transition-fast);
+}
+.orderRow:hover { border-color: var(--border-hover); }
+
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+  .statsGrid { grid-template-columns: 1fr; }
+}

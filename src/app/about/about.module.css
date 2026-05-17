@@ -1,0 +1,112 @@
+.page { overflow-x: hidden; }
+
+/* Hero */
+.hero {
+  position: relative; min-height: 70vh; display: flex; align-items: center;
+  overflow: hidden; padding: 60px 0;
+}
+.heroGlow1 { position: absolute; top: -20%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(147,51,234,0.12) 0%, transparent 70%); pointer-events: none; }
+.heroGlow2 { position: absolute; bottom: -20%; right: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); pointer-events: none; }
+.heroContent { position: relative; z-index: 1; display: flex; align-items: center; gap: 48px; }
+.heroLeft { flex: 1.2; }
+.heroRight { flex: 0.8; }
+.eyebrow {
+  display: inline-block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--primary-400); margin-bottom: 16px;
+  padding: 6px 14px; background: rgba(147,51,234,0.1); border: 1px solid rgba(147,51,234,0.2);
+  border-radius: var(--radius-full);
+}
+.heroDesc { font-size: 1.05rem; line-height: 1.8; color: var(--text-secondary); margin-top: 20px; max-width: 560px; }
+
+/* Section Header */
+.sectionHeader { text-align: center; margin-bottom: 48px; }
+
+/* Mission / Vision */
+.mvGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.mvCard {
+  padding: 40px; background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl); backdrop-filter: blur(20px);
+  transition: all var(--transition-base);
+}
+.mvCard:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.mvIcon { font-size: 2.5rem; margin-bottom: 16px; }
+
+/* Values */
+.valuesGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.valueCard {
+  text-align: center; padding: 36px 24px; background: var(--bg-card);
+  border: 1px solid var(--border-color); border-radius: var(--radius-lg);
+  transition: all var(--transition-base); position: relative; overflow: hidden;
+}
+.valueCard::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 3px; background: var(--gradient-primary); border-radius: 0 0 3px 3px;
+  opacity: 0; transition: opacity var(--transition-base);
+}
+.valueCard:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: var(--shadow-glow); }
+.valueCard:hover::before { opacity: 1; }
+.valueIcon { font-size: 2.2rem; display: block; margin-bottom: 16px; }
+.valueTitle { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; }
+.valueDesc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 40px; max-width: 700px; margin: 0 auto; }
+.timeline::before {
+  content: ''; position: absolute; left: 15px; top: 0; bottom: 0;
+  width: 2px; background: linear-gradient(to bottom, var(--primary-600), var(--primary-800), transparent);
+}
+.timelineItem { position: relative; margin-bottom: 40px; animation: fadeIn 0.5s ease-out both; }
+.timelineItem:last-child { margin-bottom: 0; }
+.timelineDot {
+  position: absolute; left: -33px; top: 8px; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--primary-500); border: 3px solid var(--bg-primary);
+  box-shadow: 0 0 10px rgba(147,51,234,0.4);
+}
+.timelineCard {
+  padding: 24px; background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg); transition: all var(--transition-base);
+}
+.timelineCard:hover { border-color: var(--border-hover); box-shadow: var(--shadow-md); }
+.timelineYear {
+  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.8rem;
+  color: var(--primary-400); text-transform: uppercase; letter-spacing: 0.08em;
+}
+.timelineTitle { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; margin: 6px 0; }
+.timelineDesc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+/* Team */
+.teamGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.teamCard {
+  text-align: center; padding: 36px 24px; background: var(--bg-card);
+  border: 1px solid var(--border-color); border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+.teamCard:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: var(--shadow-glow); }
+.teamAvatar {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px;
+  background: var(--gradient-card); border: 2px solid var(--border-color);
+  display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
+}
+.teamName { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; }
+.teamRole { font-size: 0.8rem; color: var(--primary-400); margin-top: 4px; }
+
+/* Stats */
+.statsSection {
+  padding: 60px 0; background: var(--gradient-card);
+  border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
+}
+.statsGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+.statItem {}
+.statNum { display: block; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 2.5rem; background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.statLabel { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; }
+
+@media (max-width: 1024px) {
+  .heroContent { flex-direction: column; text-align: center; }
+  .heroDesc { margin: 20px auto 0; }
+  .valuesGrid, .teamGrid, .statsGrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .mvGrid { grid-template-columns: 1fr; }
+  .valuesGrid, .teamGrid { grid-template-columns: 1fr; }
+  .statsGrid { grid-template-columns: repeat(2, 1fr); }
+}
