@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { UploadButton } from "@/utils/uploadthing";
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import styles from './admin.module.css';
@@ -21,6 +22,7 @@ export default function AdminPage() {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [orderFilter, setOrderFilter] = useState('all');
   const [showProductModal, setShowProductModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
@@ -141,6 +143,8 @@ export default function AdminPage() {
       toast.error('Failed to delete product');
     }
   };
+
+
 
   if (authLoading || !user || user.role !== 'admin') {
     return <div className="page-loader"><div className="spinner spinner-lg" /></div>;
@@ -404,8 +408,41 @@ export default function AdminPage() {
                   </div>
                 </div>
                 <div className="input-group">
-                  <label>Image URL</label>
-                  <input className="input" value={productForm.image_url} onChange={e => setProductForm(f => ({ ...f, image_url: e.target.value }))} placeholder="https://..." />
+                  <label>Image URL / Upload</label>
+                  <div className="flex gap-2">
+                    <input className="input" value={productForm.image_url} onChange={e => setProductForm(f => ({ ...f, image_url: e.target.value }))} placeholder="https://..." style={{ flex: 1 }} />
+                    <div style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', height: '100%' }}>
+                      <UploadButton
+                        endpoint="imageUploader"
+                        onClientUploadComplete={(res) => {
+                          console.log("Upload Completed", res);
+                          if (res && res.length > 0) {
+                            setProductForm(f => ({ ...f, image_url: res[0].url }));
+                            toast.success('Image uploaded successfully');
+                          }
+                        }}
+                        onUploadError={(error) => {
+                          toast.error(`Error uploading image: ${error.message}`);
+                        }}
+                        appearance={{
+                          button: "btn btn-secondary",
+                          allowedContent: "hidden"
+                        }}
+                        content={{
+                          button({ ready }) {
+                            if (ready) return <div>Upload Image</div>;
+                            return "Loading...";
+                          },
+                          allowedContent({ ready, fileTypes, isUploading }) {
+                            return "";
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {productForm.image_url && (
+                    <img src={productForm.image_url} alt="Preview" style={{ marginTop: 8, width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border-color)' }} />
+                  )}
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                   <div className="input-group">

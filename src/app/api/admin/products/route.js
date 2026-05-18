@@ -63,6 +63,19 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
     }
 
+    // Automatically create a stock entry for the new product
+    const { error: stockError } = await supabase
+      .from('stock')
+      .insert({
+        product_id: data.id,
+        quantity: 0
+      });
+
+    if (stockError) {
+      console.error('Stock creation error:', stockError);
+      // We don't fail the whole request, but log the error. The admin might need to add stock manually if this fails.
+    }
+
     return NextResponse.json({ product: data }, { status: 201 });
   } catch (err) {
     console.error('Product creation error:', err);
