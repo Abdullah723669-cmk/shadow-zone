@@ -58,21 +58,21 @@ export default function HomePage() {
           <div className={styles.heroLeft}>
             <div className={styles.heroBadge}>
               <span className={styles.heroBadgeDot} />
-              New Collection 2025
+              New Collection 2026
             </div>
             <h1 className={`heading-display heading-1 ${styles.heroTitle}`}>
               Elevate Your <br />
               <span className="text-gradient">Style Game</span>
             </h1>
             <p className={styles.heroDesc}>
-              Discover premium readymade fashion for the entire family. 
+              Discover premium readymade fashion for the entire family.
               From sharp menswear to elegant ladies&apos; wear and adorable kids&apos; collections.
             </p>
             <div className={styles.heroActions}>
               <Link href="/shop" className="btn btn-primary btn-lg">
                 Shop Now
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                  <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
                 </svg>
               </Link>
               <Link href="/shop?featured=true" className="btn btn-secondary btn-lg">
@@ -137,7 +137,7 @@ export default function HomePage() {
                 <p className={styles.catDesc}>{cat.desc}</p>
                 <span className={styles.catArrow}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                    <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
                   </svg>
                 </span>
               </Link>
@@ -156,7 +156,7 @@ export default function HomePage() {
             </div>
             <Link href="/shop?featured=true" className="btn btn-secondary btn-sm">
               View All
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
             </Link>
           </div>
           {loading ? (
@@ -211,7 +211,7 @@ export default function HomePage() {
             </div>
             <Link href="/shop?sort=created_at&order=desc" className="btn btn-secondary btn-sm">
               View All
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
             </Link>
           </div>
           {!loading && (
