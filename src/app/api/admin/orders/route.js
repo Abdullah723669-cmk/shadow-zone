@@ -49,6 +49,61 @@ export async function PUT(request) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }
 
+    const { data: currentOrder, error: fetchOrderError } = await supabase
+      .from('orders')
+      .select('status')
+      .eq('id', order_id)
+      .single();
+
+    if (fetchOrderError || !currentOrder) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    const isTransitioningToCancelled = currentOrder.status !== 'cancelled' && status === 'cancelled';
+
+    if (isTransitioningToCancelled) {
+      // Retrieve associated order items
+      const { data: orderItems, error: itemsError } = await supabase
+        .from('order_items')
+        .select('*')
+        .eq('order_id', order_id);
+
+      if (!itemsError && orderItems) {
+        for (const item of orderItems) {
+          try {
+            let query = supabase.from('stock').select('*').eq('product_id', item.product_id);
+            if (item.size) {
+              query = query.eq('size', item.size);
+            } else {
+              query = query.is('size', null);
+            }
+
+            let { data: stockEntry } = await query.maybeSingle();
+
+            // Fallback: if size was requested but no size-specific stock entry exists, check for null-size entry
+            if (!stockEntry && item.size) {
+              const { data: fallbackEntry } = await supabase.from('stock')
+                .select('*')
+                .eq('product_id', item.product_id)
+                .is('size', null)
+                .maybeSingle();
+              stockEntry = fallbackEntry;
+            }
+
+            if (stockEntry) {
+              const newQty = (stockEntry.quantity || 0) + item.quantity;
+              await supabase
+                .from('stock')
+                .update({ quantity: newQty })
+                .eq('id', stockEntry.id);
+            }
+          } catch (stockErr) {
+            console.error('Failed to increment stock for cancelled item:', item.product_id, stockErr);
+          }
+        }
+      }
+    }
+
     const { data, error } = await supabase
       .from('orders')
       .update({ status, updated_at: new Date().toISOString() })

@@ -95,16 +95,37 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Failed to create order items' }, { status: 500 });
     }
 
-    // Update stock
+    // Update stock in real-time
     for (const item of items) {
-      if (item.size) {
-        await supabase.rpc('decrement_stock', {
-          p_product_id: item.id,
-          p_size: item.size,
-          p_qty: item.quantity,
-        }).catch(() => {
-          // Stock update is best-effort
-        });
+      try {
+        let query = supabase.from('stock').select('*').eq('product_id', item.id);
+        if (item.size) {
+          query = query.eq('size', item.size);
+        } else {
+          query = query.is('size', null);
+        }
+
+        let { data: stockEntry } = await query.maybeSingle();
+
+        // Fallback: if size was requested but no size-specific stock entry exists, check for null-size entry
+        if (!stockEntry && item.size) {
+          const { data: fallbackEntry } = await supabase.from('stock')
+            .select('*')
+            .eq('product_id', item.id)
+            .is('size', null)
+            .maybeSingle();
+          stockEntry = fallbackEntry;
+        }
+
+        if (stockEntry) {
+          const newQty = Math.max(0, (stockEntry.quantity || 0) - item.quantity);
+          await supabase
+            .from('stock')
+            .update({ quantity: newQty })
+            .eq('id', stockEntry.id);
+        }
+      } catch (stockErr) {
+        console.error('Failed to decrement stock for item:', item.id, stockErr);
       }
     }
 
