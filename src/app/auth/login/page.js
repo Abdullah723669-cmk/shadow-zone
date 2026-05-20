@@ -4,9 +4,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from '../auth.module.css';
 
 function LoginForm() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ function LoginForm() {
     setLoading(true);
     try {
       await login(email, password);
-      toast.success('Welcome back!');
+      toast.success(t('auth.welcomeBackToast'));
       router.push(redirect);
     } catch (err) {
       toast.error(err.message);
@@ -36,13 +38,13 @@ function LoginForm() {
         <div className={styles.card}>
           <div className={styles.header}>
             <Link href="/" className={styles.logo}>Shadow Zone</Link>
-            <h1>Welcome Back</h1>
-            <p>Sign in to your account</p>
+            <h1>{t('auth.login')}</h1>
+            <p>{t('auth.loginDesc')}</p>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className="input-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">{t('common.email')}</label>
               <input
                 id="email"
                 type="email"
@@ -54,7 +56,7 @@ function LoginForm() {
               />
             </div>
             <div className="input-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">{t('auth.password')}</label>
               <input
                 id="password"
                 type="password"
@@ -66,12 +68,12 @@ function LoginForm() {
               />
             </div>
             <button type="submit" className="btn btn-primary w-full" disabled={loading}>
-              {loading ? <span className="spinner" /> : 'Sign In'}
+              {loading ? <span className="spinner" /> : t('auth.loginNow')}
             </button>
           </form>
 
           <p className={styles.switch}>
-            Don&apos;t have an account? <Link href="/auth/signup">Create one</Link>
+            {t('auth.dontHaveAccount')} <Link href="/auth/signup">{t('auth.signupNow')}</Link>
           </p>
         </div>
       </div>

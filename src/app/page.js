@@ -2,25 +2,28 @@
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { useTranslation } from '@/context/LanguageContext';
 import ProductCard from '@/components/ProductCard';
 import styles from './page.module.css';
 
 const Logo3D = dynamic(() => import('@/components/Logo3D'), { ssr: false });
 
-const CATEGORIES = [
-  { name: 'Mens', label: "Men's", icon: '👔', desc: 'Shirts, Pants, Jackets & more' },
-  { name: 'Ladies', label: 'Ladies', icon: '👗', desc: 'Dresses, Tops, Kurtis & more' },
-  { name: 'Kids', label: 'Kids', icon: '🧸', desc: 'T-Shirts, Frocks, Sets & more' },
-];
-
-const FEATURES = [
-  { icon: '🚚', title: 'Free Shipping', desc: 'On orders above ৳2,000' },
-  { icon: '🔄', title: 'Easy Returns', desc: '7-day return policy' },
-  { icon: '🛡️', title: 'Secure Payment', desc: '100% secure checkout' },
-  { icon: '💎', title: 'Premium Quality', desc: 'Handpicked fabrics' },
-];
-
 export default function HomePage() {
+  const { t, language } = useTranslation();
+  
+  const CATEGORIES = [
+    { name: 'Mens', label: t('shop.mens'), icon: '👔', desc: t('home.mensDesc') },
+    { name: 'Ladies', label: t('shop.ladies'), icon: '👗', desc: t('home.ladiesDesc') },
+    { name: 'Kids', label: t('shop.kids'), icon: '🧸', desc: t('home.kidsDesc') },
+  ];
+
+  const FEATURES = [
+    { icon: '🚚', title: t('home.freeShipping'), desc: t('home.freeShippingDesc') },
+    { icon: '🔄', title: t('home.easyReturns'), desc: t('home.easyReturnsDesc') },
+    { icon: '🛡️', title: t('home.securePayment'), desc: t('home.securePaymentDesc') },
+    { icon: '💎', title: t('home.premiumQuality'), desc: t('home.premiumQualityDesc') },
+  ];
+
   const [featured, setFeatured] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,41 +61,40 @@ export default function HomePage() {
           <div className={styles.heroLeft}>
             <div className={styles.heroBadge}>
               <span className={styles.heroBadgeDot} />
-              New Collection 2026
+              {t('home.newCollection')}
             </div>
             <h1 className={`heading-display heading-1 ${styles.heroTitle}`}>
-              Elevate Your <br />
-              <span className="text-gradient">Style Game</span>
+              {t('home.elevateYour')} <br />
+              <span className="text-gradient">{t('home.style')}</span>
             </h1>
             <p className={styles.heroDesc}>
-              Discover premium readymade fashion for the entire family.
-              From sharp menswear to elegant ladies&apos; wear and adorable kids&apos; collections.
+              {t('home.heroDescription')}
             </p>
             <div className={styles.heroActions}>
               <Link href="/shop" className="btn btn-primary btn-lg">
-                Shop Now
+                {t('home.shopNow')}
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
                 </svg>
               </Link>
               <Link href="/shop?featured=true" className="btn btn-secondary btn-lg">
-                Featured Picks
+                {t('home.featured')}
               </Link>
             </div>
             <div className={styles.heroStats}>
               <div className={styles.stat}>
-                <span className={styles.statNum}>60+</span>
-                <span className={styles.statLabel}>Products</span>
+                <span className={styles.statNum}>{language === 'bn' ? '৬০+' : '60+'}</span>
+                <span className={styles.statLabel}>{t('home.products')}</span>
               </div>
               <div className={styles.statDivider} />
               <div className={styles.stat}>
-                <span className={styles.statNum}>3</span>
-                <span className={styles.statLabel}>Categories</span>
+                <span className={styles.statNum}>{language === 'bn' ? '৩' : '3'}</span>
+                <span className={styles.statLabel}>{t('home.categories')}</span>
               </div>
               <div className={styles.statDivider} />
               <div className={styles.stat}>
-                <span className={styles.statNum}>15</span>
-                <span className={styles.statLabel}>Sub-Categories</span>
+                <span className={styles.statNum}>{language === 'bn' ? '১৫' : '15'}</span>
+                <span className={styles.statLabel}>{t('home.subCategories')}</span>
               </div>
             </div>
           </div>
@@ -125,8 +127,10 @@ export default function HomePage() {
       <section className="section">
         <div className="container">
           <div className={styles.sectionHeader}>
-            <h2 className="heading-display heading-2">Shop by <span className="text-gradient">Category</span></h2>
-            <p className="text-secondary">Browse our curated collections</p>
+            <h2 className="heading-display heading-2">
+              {t('home.shopByCategory').split(' ').slice(0, -2).join(' ')} <span className="text-gradient">{t('home.shopByCategory').split(' ').slice(-2).join(' ')}</span>
+            </h2>
+            <p className="text-secondary">{t('home.browseCollections')}</p>
           </div>
           <div className={styles.catGrid}>
             {CATEGORIES.map((cat) => (
@@ -137,7 +141,7 @@ export default function HomePage() {
                 <p className={styles.catDesc}>{cat.desc}</p>
                 <span className={styles.catArrow}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                     <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
                   </svg>
                 </span>
               </Link>
@@ -151,11 +155,13 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.sectionHeader}>
             <div>
-              <h2 className="heading-display heading-2">Featured <span className="text-gradient">Products</span></h2>
-              <p className="text-secondary mt-2">Our top picks for you</p>
+              <h2 className="heading-display heading-2">
+                {t('home.featuredProducts').split(' ')[0]} <span className="text-gradient">{t('home.featuredProducts').split(' ').slice(1).join(' ')}</span>
+              </h2>
+              <p className="text-secondary mt-2">{t('home.topPicks')}</p>
             </div>
             <Link href="/shop?featured=true" className="btn btn-secondary btn-sm">
-              View All
+              {t('common.viewAll')}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
             </Link>
           </div>
@@ -187,14 +193,14 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.ctaInner}>
             <div className={styles.ctaGlow} />
-            <h2 className="heading-display heading-2">Ready to upgrade your wardrobe?</h2>
-            <p className="text-secondary mt-2">Join Shadow Zone and discover fashion that fits your lifestyle.</p>
+            <h2 className="heading-display heading-2">{t('home.readyToUpgrade')}</h2>
+            <p className="text-secondary mt-2">{t('home.ctaDesc')}</p>
             <div className="flex gap-4 mt-6" style={{ justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/auth/signup" className="btn btn-primary btn-lg">
-                Create Account
+                {t('common.signup')}
               </Link>
               <Link href="/shop" className="btn btn-secondary btn-lg">
-                Browse Collection
+                {t('home.browseCollection')}
               </Link>
             </div>
           </div>
@@ -206,11 +212,13 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.sectionHeader}>
             <div>
-              <h2 className="heading-display heading-2">New <span className="text-gradient">Arrivals</span></h2>
-              <p className="text-secondary mt-2">Fresh additions to our collection</p>
+              <h2 className="heading-display heading-2">
+                {t('home.newArrivals').split(' ')[0]} <span className="text-gradient">{t('home.newArrivals').split(' ').slice(1).join(' ')}</span>
+              </h2>
+              <p className="text-secondary mt-2">{t('home.newAdditions')}</p>
             </div>
             <Link href="/shop?sort=created_at&order=desc" className="btn btn-secondary btn-sm">
-              View All
+              {t('common.viewAll')}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
             </Link>
           </div>

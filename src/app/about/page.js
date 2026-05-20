@@ -1,6 +1,7 @@
 'use client';
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from './about.module.css';
 
 const Logo3D = dynamic(() => import('@/components/Logo3D'), { ssr: false });
@@ -13,20 +14,22 @@ const TEAM = [
 ];
 
 const VALUES = [
-  { icon: '✨', title: 'Quality First', desc: 'Every stitch, every fabric is chosen with care. We never compromise on the quality of our garments.' },
-  { icon: '🌍', title: 'Sustainable Fashion', desc: 'We source eco-friendly materials and follow ethical manufacturing practices to protect our planet.' },
-  { icon: '💡', title: 'Innovation', desc: 'From smart sizing tools to AI-powered recommendations, we push the boundaries of online fashion retail.' },
-  { icon: '🤝', title: 'Customer Centric', desc: 'Your satisfaction is our top priority. We listen, adapt, and deliver beyond expectations.' },
+  { icon: '✨', titleKey: 'qualityFirst', descKey: 'qualityFirstDesc' },
+  { icon: '🌍', titleKey: 'sustainableFashion', descKey: 'sustainableFashionDesc' },
+  { icon: '💡', titleKey: 'innovation', descKey: 'innovationDesc' },
+  { icon: '🤝', titleKey: 'customerCentric', descKey: 'customerCentricDesc' },
 ];
 
 const MILESTONES = [
-  { year: '2020', title: 'The Beginning', desc: 'Shadow Zone was born from a small workshop in Dhaka with a dream to redefine readymade fashion.' },
-  { year: '2021', title: 'Online Launch', desc: 'Launched our e-commerce platform, bringing premium fashion to doorsteps across Bangladesh.' },
-  { year: '2023', title: 'Kids Collection', desc: 'Expanded our catalog with a vibrant kids collection, becoming a one-stop family fashion brand.' },
-  { year: '2025', title: '10,000+ Orders', desc: 'Crossed 10,000 happy customers and growing, with plans to expand internationally.' },
+  { year: '2020', titleKey: 'theBeginning', descKey: 'theBeginningDesc' },
+  { year: '2021', titleKey: 'onlineLaunch', descKey: 'onlineLaunchDesc' },
+  { year: '2023', titleKey: 'kidsCollection', descKey: 'kidsCollectionDesc' },
+  { year: '2025', titleKey: 'tenKOrders', descKey: 'tenKOrdersDesc' },
 ];
 
 export default function AboutPage() {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.page}>
       {/* Hero */}
@@ -35,14 +38,12 @@ export default function AboutPage() {
         <div className={styles.heroGlow2} />
         <div className={`container ${styles.heroContent}`}>
           <div className={styles.heroLeft}>
-            <span className={styles.eyebrow}>Our Story</span>
+            <span className={styles.eyebrow}>{t('about.ourStory')}</span>
             <h1 className="heading-display heading-1">
-              The Face Behind <br /><span className="text-gradient">Shadow Zone</span>
+              {t('about.storyTitle').split('Shadow Zone')[0]}<br /><span className="text-gradient">Shadow Zone</span>
             </h1>
             <p className={styles.heroDesc}>
-              Born in the heart of Bangladesh, Shadow Zone is more than a clothing brand — 
-              it&apos;s a movement to make premium readymade fashion accessible to every family. 
-              We blend timeless craftsmanship with modern design to create garments that speak confidence.
+              {t('about.storyDesc')}
             </p>
           </div>
           <div className={styles.heroRight}>
@@ -59,18 +60,16 @@ export default function AboutPage() {
           <div className={styles.mvGrid}>
             <div className={styles.mvCard}>
               <div className={styles.mvIcon}>🎯</div>
-              <h2 className="heading-display heading-3">Our Mission</h2>
+              <h2 className="heading-display heading-3">{t('about.mission')}</h2>
               <p className="text-secondary mt-2">
-                To provide high-quality, affordable readymade garments for Men, Ladies, and Kids 
-                — empowering every individual to express themselves through fashion without breaking the bank.
+                {t('about.missionDesc')}
               </p>
             </div>
             <div className={styles.mvCard}>
               <div className={styles.mvIcon}>🔭</div>
-              <h2 className="heading-display heading-3">Our Vision</h2>
+              <h2 className="heading-display heading-3">{t('about.vision')}</h2>
               <p className="text-secondary mt-2">
-                To become Bangladesh&apos;s most trusted online fashion destination, known for 
-                innovation, quality, and an unmatched customer experience that sets global standards.
+                {t('about.visionDesc')}
               </p>
             </div>
           </div>
@@ -81,15 +80,15 @@ export default function AboutPage() {
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
           <div className={styles.sectionHeader}>
-            <h2 className="heading-display heading-2">What We <span className="text-gradient">Stand For</span></h2>
-            <p className="text-secondary mt-2">The core values driving everything we do</p>
+            <h2 className="heading-display heading-2">{t('about.whatWeStandFor').split('Stand For')[0]}<span className="text-gradient">Stand For</span></h2>
+            <p className="text-secondary mt-2">{t('about.coreValues')}</p>
           </div>
           <div className={styles.valuesGrid}>
             {VALUES.map((v, i) => (
               <div key={i} className={styles.valueCard}>
                 <span className={styles.valueIcon}>{v.icon}</span>
-                <h3 className={styles.valueTitle}>{v.title}</h3>
-                <p className={styles.valueDesc}>{v.desc}</p>
+                <h3 className={styles.valueTitle}>{t(`about.${v.titleKey}`)}</h3>
+                <p className={styles.valueDesc}>{t(`about.${v.descKey}`)}</p>
               </div>
             ))}
           </div>
@@ -100,8 +99,8 @@ export default function AboutPage() {
       <section className="section">
         <div className="container">
           <div className={styles.sectionHeader}>
-            <h2 className="heading-display heading-2">Our <span className="text-gradient">Journey</span></h2>
-            <p className="text-secondary mt-2">Key milestones that shaped who we are</p>
+            <h2 className="heading-display heading-2">{t('about.ourJourney').split('Journey')[0]}<span className="text-gradient">Journey</span></h2>
+            <p className="text-secondary mt-2">{t('about.milestones')}</p>
           </div>
           <div className={styles.timeline}>
             {MILESTONES.map((m, i) => (
@@ -109,8 +108,8 @@ export default function AboutPage() {
                 <div className={styles.timelineDot} />
                 <div className={styles.timelineCard}>
                   <span className={styles.timelineYear}>{m.year}</span>
-                  <h3 className={styles.timelineTitle}>{m.title}</h3>
-                  <p className={styles.timelineDesc}>{m.desc}</p>
+                  <h3 className={styles.timelineTitle}>{t(`about.${m.titleKey}`)}</h3>
+                  <p className={styles.timelineDesc}>{t(`about.${m.descKey}`)}</p>
                 </div>
               </div>
             ))}
@@ -122,8 +121,8 @@ export default function AboutPage() {
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
           <div className={styles.sectionHeader}>
-            <h2 className="heading-display heading-2">Meet Our <span className="text-gradient">Team</span></h2>
-            <p className="text-secondary mt-2">The passionate people behind the brand</p>
+            <h2 className="heading-display heading-2">{t('about.meetOurTeam').split('Team')[0]}<span className="text-gradient">Team</span></h2>
+            <p className="text-secondary mt-2">{t('about.passionatePeople')}</p>
           </div>
           <div className={styles.teamGrid}>
             {TEAM.map((t, i) => (
@@ -142,10 +141,10 @@ export default function AboutPage() {
         <div className="container">
           <div className={styles.statsGrid}>
             {[
-              { num: '60+', label: 'Products' },
-              { num: '10K+', label: 'Happy Customers' },
-              { num: '15', label: 'Sub-Categories' },
-              { num: '99%', label: 'Satisfaction Rate' },
+              { num: '60+', label: t('about.statsProducts') },
+              { num: '10K+', label: t('about.statsHappyCustomers') },
+              { num: '15', label: t('about.statsSubCategories') },
+              { num: '99%', label: t('about.statsSatisfactionRate') },
             ].map((s, i) => (
               <div key={i} className={styles.statItem}>
                 <span className={styles.statNum}>{s.num}</span>

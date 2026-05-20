@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from '../dashboard.module.css';
 
 const statusColors = {
@@ -10,11 +11,23 @@ const statusColors = {
 };
 
 export default function OrdersPage() {
+  const { t, language } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'pending': return t('dashboard.pending');
+      case 'processing': return t('dashboard.processing');
+      case 'shipped': return t('dashboard.shipped');
+      case 'delivered': return t('dashboard.delivered');
+      case 'cancelled': return t('dashboard.cancelled');
+      default: return status;
+    }
+  };
 
   useEffect(() => {
     if (!authLoading && !user) router.push('/auth/login?redirect=/dashboard/orders');
@@ -43,7 +56,9 @@ export default function OrdersPage() {
   return (
     <div className={styles.page}>
       <div className="container">
-        <h1 className="heading-display heading-2 mb-6">My <span className="text-gradient">Orders</span></h1>
+        <h1 className="heading-display heading-2 mb-6">
+          {t('dashboard.myOrders').split(' ')[0]} <span className="text-gradient">{t('dashboard.myOrders').split(' ').slice(1).join(' ')}</span>
+        </h1>
 
         {/* Filter tabs */}
         <div className="flex gap-2 mb-6 flex-wrap">
@@ -53,7 +68,7 @@ export default function OrdersPage() {
               className={`btn btn-sm ${filter === s ? 'btn-primary' : 'btn-secondary'}`}
               onClick={() => setFilter(s)}
             >
-              {s || 'All'}
+              {s ? getStatusLabel(s) : t('common.all')}
             </button>
           ))}
         </div>
@@ -62,8 +77,8 @@ export default function OrdersPage() {
           <div className="page-loader" style={{ minHeight: 300 }}><div className="spinner spinner-lg" /></div>
         ) : orders.length === 0 ? (
           <div className="empty-state">
-            <h3>No orders found</h3>
-            <p className="mt-2">Try changing the filter or start shopping!</p>
+            <h3>{t('dashboard.noOrdersFound')}</h3>
+            <p className="mt-2">{t('dashboard.tryChangingFilter')}</p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
@@ -71,16 +86,16 @@ export default function OrdersPage() {
               <div key={order.id} className="card p-6">
                 <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
                   <div>
-                    <p className="font-bold">Order #{order.id}</p>
+                    <p className="font-bold">{t('admin.order')} #{order.id}</p>
                     <p className="text-sm text-muted">
-                      {new Date(order.created_at).toLocaleDateString('en-US', {
+                      {new Date(order.created_at).toLocaleDateString(language === 'bn' ? 'bn-BD' : 'en-US', {
                         year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
                       })}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="price">৳{parseFloat(order.total_amount).toLocaleString()}</span>
-                    <span className={`badge ${statusColors[order.status]}`}>{order.status}</span>
+                    <span className={`badge ${statusColors[order.status]}`}>{getStatusLabel(order.status)}</span>
                   </div>
                 </div>
                 {order.order_items && order.order_items.length > 0 && (
@@ -91,8 +106,8 @@ export default function OrdersPage() {
                           <img src={item.products.image_url} alt="" style={{ width: 40, height: 50, objectFit: 'cover', borderRadius: 'var(--radius-sm)' }} />
                         )}
                         <div className="flex-1">
-                          <p className="text-sm font-medium">{item.products?.name || `Product #${item.product_id}`}</p>
-                          {item.size && <p className="text-xs text-muted">Size: {item.size}</p>}
+                          <p className="text-sm font-medium">{item.products?.name || `${t('admin.order')} #${item.product_id}`}</p>
+                          {item.size && <p className="text-xs text-muted">{t('common.size')}: {item.size}</p>}
                         </div>
                         <p className="text-sm text-muted">×{item.quantity}</p>
                         <p className="text-sm price">৳{parseFloat(item.price).toLocaleString()}</p>
@@ -102,7 +117,7 @@ export default function OrdersPage() {
                 )}
                 {order.shipping_address && (
                   <div className="mt-4" style={{ padding: '12px', background: 'var(--bg-glass)', borderRadius: 'var(--radius-md)', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                    <strong>Shipping: </strong>{order.shipping_address}
+                    <strong>{t('dashboard.shipping')}: </strong>{order.shipping_address}
                   </div>
                 )}
               </div>

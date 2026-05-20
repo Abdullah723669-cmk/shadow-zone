@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/context/ToastContext';
 import ProductCard from '@/components/ProductCard';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from './product.module.css';
 
 export default function ProductPage({ params }) {
+  const { t } = useTranslation();
   const { id } = use(params);
   const [product, setProduct] = useState(null);
   const [stock, setStock] = useState([]);
@@ -16,6 +18,15 @@ export default function ProductPage({ params }) {
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
   const toast = useToast();
+
+  const getCategoryLabel = (cat) => {
+    if (!cat) return '';
+    const key = cat.toLowerCase();
+    if (key === 'mens' || key === 'men') return t('shop.mens');
+    if (key === 'ladies' || key === 'women' || key === 'lady') return t('shop.ladies');
+    if (key === 'kids' || key === 'kid') return t('shop.kids');
+    return cat;
+  };
 
   useEffect(() => {
     async function load() {
@@ -42,7 +53,7 @@ export default function ProductPage({ params }) {
   const handleAddToCart = () => {
     if (!product) return;
     addItem(product, quantity, selectedSize);
-    toast.success(`${product.name} added to bag!`);
+    toast.success(`${product.name} ${t('product.addedToBag')}!`);
   };
 
   const discount = product?.original_price
@@ -60,9 +71,9 @@ export default function ProductPage({ params }) {
   if (!product) {
     return (
       <div className="empty-state" style={{ paddingTop: 120 }}>
-        <h2>Product Not Found</h2>
-        <p className="mt-2 text-muted">The product you&apos;re looking for doesn&apos;t exist.</p>
-        <Link href="/shop" className="btn btn-primary mt-4">Back to Shop</Link>
+        <h2>{t('product.notFound')}</h2>
+        <p className="mt-2 text-muted">{t('product.notFoundDesc')}</p>
+        <Link href="/shop" className="btn btn-primary mt-4">{t('product.backToShop')}</Link>
       </div>
     );
   }
@@ -75,11 +86,11 @@ export default function ProductPage({ params }) {
       <div className="container">
         {/* Breadcrumb */}
         <nav className={styles.breadcrumb}>
-          <Link href="/">Home</Link>
+          <Link href="/">{t('navbar.home')}</Link>
           <span>/</span>
-          <Link href="/shop">Shop</Link>
+          <Link href="/shop">{t('navbar.shop')}</Link>
           <span>/</span>
-          <Link href={`/shop?category=${product.category}`}>{product.category}</Link>
+          <Link href={`/shop?category=${product.category}`}>{getCategoryLabel(product.category)}</Link>
           <span>/</span>
           <span className={styles.current}>{product.name}</span>
         </nav>
@@ -95,7 +106,7 @@ export default function ProductPage({ params }) {
 
           {/* Info */}
           <div className={styles.info}>
-            <span className={styles.category}>{product.category} / {product.sub_category}</span>
+            <span className={styles.category}>{getCategoryLabel(product.category)} / {product.sub_category}</span>
             <h1 className={styles.name}>{product.name}</h1>
 
             {product.rating > 0 && (
@@ -105,7 +116,7 @@ export default function ProductPage({ params }) {
                     <span key={i} style={{ opacity: i < Math.round(product.rating) ? 1 : 0.3 }}>★</span>
                   ))}
                 </div>
-                <span className="text-sm text-muted">({product.reviews_count} reviews)</span>
+                <span className="text-sm text-muted">({product.reviews_count} {t('product.reviews')})</span>
               </div>
             )}
 
@@ -115,17 +126,17 @@ export default function ProductPage({ params }) {
                 <span className={styles.originalPrice}>৳{parseFloat(product.original_price).toLocaleString()}</span>
               )}
               {discount > 0 && (
-                <span className="badge badge-error">{discount}% OFF</span>
+                <span className="badge badge-error">{discount}% {t('product.off')}</span>
               )}
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
               {totalStock === 0 ? (
-                <span className="badge badge-error">Out of Stock</span>
+                <span className="badge badge-error">{t('product.outOfStock')}</span>
               ) : totalStock < 10 ? (
-                <span className="badge badge-warning" style={{ backgroundColor: '#f59e0b', color: '#fff' }}>Low Stock ({totalStock} left)</span>
+                <span className="badge badge-warning" style={{ backgroundColor: '#f59e0b', color: '#fff' }}>{t('product.lowStock')} ({totalStock} {t('product.left')})</span>
               ) : (
-                <span className="badge badge-success">In Stock</span>
+                <span className="badge badge-success">{t('product.inStock')}</span>
               )}
             </div>
 
@@ -136,7 +147,7 @@ export default function ProductPage({ params }) {
             {/* Size Selection */}
             {sizes.length > 0 && (
               <div className={styles.optionGroup}>
-                <label>Size</label>
+                <label>{t('common.size')}</label>
                 <div className={styles.sizeGrid}>
                   {sizes.map(size => {
                     const stkItem = stock.find(s => s.size === size);
@@ -158,7 +169,7 @@ export default function ProductPage({ params }) {
 
             {/* Quantity */}
             <div className={styles.optionGroup}>
-              <label>Quantity</label>
+              <label>{t('product.quantity')}</label>
               <div className="qty-control" style={{ width: 'fit-content' }}>
                 <button onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={totalStock === 0}>−</button>
                 <span>{totalStock === 0 ? 0 : quantity}</span>
@@ -176,7 +187,7 @@ export default function ProductPage({ params }) {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
-                {totalStock === 0 ? 'Out of Stock' : `Add to Bag — ৳${(parseFloat(product.price) * quantity).toLocaleString()}`}
+                {totalStock === 0 ? t('product.outOfStock') : `${t('product.addToBag')} — ৳${(parseFloat(product.price) * quantity).toLocaleString()}`}
               </button>
             </div>
 
@@ -184,16 +195,16 @@ export default function ProductPage({ params }) {
             <div className={styles.details}>
               {product.color && (
                 <div className={styles.detailRow}>
-                  <span className={styles.detailLabel}>Color</span>
+                  <span className={styles.detailLabel}>{t('common.color')}</span>
                   <span>{product.color}</span>
                 </div>
               )}
               <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>Category</span>
-                <span>{product.category}</span>
+                <span className={styles.detailLabel}>{t('common.category')}</span>
+                <span>{getCategoryLabel(product.category)}</span>
               </div>
               <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>Type</span>
+                <span className={styles.detailLabel}>{t('product.type')}</span>
                 <span>{product.sub_category}</span>
               </div>
             </div>
@@ -203,7 +214,7 @@ export default function ProductPage({ params }) {
         {/* Related Products */}
         {related.length > 0 && (
           <section className={styles.related}>
-            <h2 className="heading-display heading-3">You May Also Like</h2>
+            <h2 className="heading-display heading-3">{t('product.youMayAlsoLike')}</h2>
             <div className="grid grid-4 mt-6">
               {related.map(p => (
                 <ProductCard key={p.id} product={p} />

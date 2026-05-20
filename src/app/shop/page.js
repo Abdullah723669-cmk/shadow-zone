@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslation } from '@/context/LanguageContext';
 import ProductCard from '@/components/ProductCard';
 import styles from './shop.module.css';
 
@@ -10,7 +11,28 @@ const SUB_CATEGORIES = {
   Kids: ['T-Shirts', 'Frocks', 'Shorts', 'Jackets', 'Sets'],
 };
 
+const getSubCategoryLabel = (t, sub) => {
+  const mapping = {
+    'T-Shirts': 'tShirts',
+    'Shirts': 'shirts',
+    'Pants': 'pants',
+    'Jackets': 'jackets',
+    'Polos': 'polos',
+    'Dresses': 'dresses',
+    'Tops': 'tops',
+    'Kurtis': 'kurtis',
+    'Skirts': 'skirts',
+    'Blouses': 'blouses',
+    'Frocks': 'frocks',
+    'Shorts': 'shorts',
+    'Sets': 'sets',
+  };
+  const key = mapping[sub];
+  return key ? t(`product.${key}`) : sub;
+};
+
 function ShopContent() {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,9 +97,9 @@ function ShopContent() {
         <div className={styles.header}>
           <div>
             <h1 className="heading-display heading-2">
-              {filters.category || 'All'} <span className="text-gradient">Collection</span>
+              {filters.category ? t(`shop.${filters.category.toLowerCase()}`) : t('shop.all')} <span className="text-gradient">{t('shop.collection')}</span>
             </h1>
-            <p className="text-secondary mt-2">{total} products found</p>
+            <p className="text-secondary mt-2">{total} {t('shop.productsFound')}</p>
           </div>
         </div>
 
@@ -86,14 +108,14 @@ function ShopContent() {
           <aside className={styles.sidebar}>
             {/* Search */}
             <div className={styles.filterGroup}>
-              <label>Search</label>
+              <label>{t('common.search')}</label>
               <div className={styles.searchBox}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
                 </svg>
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder={t('shop.searchProducts')}
                   value={filters.search}
                   onChange={e => updateFilter('search', e.target.value)}
                   className="input"
@@ -103,18 +125,18 @@ function ShopContent() {
 
             {/* Category */}
             <div className={styles.filterGroup}>
-              <label>Category</label>
+              <label>{t('common.category')}</label>
               <div className={styles.filterChips}>
                 <button
                   className={`${styles.chip} ${!filters.category ? styles.chipActive : ''}`}
                   onClick={() => updateFilter('category', '')}
-                >All</button>
+                >{t('shop.all')}</button>
                 {Object.keys(SUB_CATEGORIES).map(cat => (
                   <button
                     key={cat}
                     className={`${styles.chip} ${filters.category === cat ? styles.chipActive : ''}`}
                     onClick={() => updateFilter('category', cat)}
-                  >{cat}</button>
+                  >{t(`shop.${cat.toLowerCase()}`)}</button>
                 ))}
               </div>
             </div>
@@ -122,18 +144,18 @@ function ShopContent() {
             {/* Sub-category */}
             {filters.category && SUB_CATEGORIES[filters.category] && (
               <div className={styles.filterGroup}>
-                <label>Sub-Category</label>
+                <label>{t('shop.subCategory')}</label>
                 <div className={styles.filterChips}>
                   <button
                     className={`${styles.chip} ${!filters.sub_category ? styles.chipActive : ''}`}
                     onClick={() => updateFilter('sub_category', '')}
-                  >All</button>
+                  >{t('shop.all')}</button>
                   {SUB_CATEGORIES[filters.category].map(sub => (
                     <button
                       key={sub}
                       className={`${styles.chip} ${filters.sub_category === sub ? styles.chipActive : ''}`}
                       onClick={() => updateFilter('sub_category', sub)}
-                    >{sub}</button>
+                    >{getSubCategoryLabel(t, sub)}</button>
                   ))}
                 </div>
               </div>
@@ -141,7 +163,7 @@ function ShopContent() {
 
             {/* Sort */}
             <div className={styles.filterGroup}>
-              <label>Sort By</label>
+              <label>{t('common.sort')}</label>
               <select
                 className="input"
                 value={`${filters.sort}-${filters.order}`}
@@ -150,12 +172,12 @@ function ShopContent() {
                   setFilters(prev => ({ ...prev, sort, order }));
                 }}
               >
-                <option value="created_at-desc">Newest First</option>
-                <option value="created_at-asc">Oldest First</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="name-asc">Name: A-Z</option>
-                <option value="rating-desc">Top Rated</option>
+                <option value="created_at-desc">{t('shop.newest')}</option>
+                <option value="created_at-asc">{t('shop.oldest')}</option>
+                <option value="price-asc">{t('shop.priceLowest')}</option>
+                <option value="price-desc">{t('shop.priceHighest')}</option>
+                <option value="name-asc">{t('shop.nameAsc')}</option>
+                <option value="rating-desc">{t('shop.rating')}</option>
               </select>
             </div>
 
@@ -167,7 +189,7 @@ function ShopContent() {
                   checked={filters.featured === 'true'}
                   onChange={e => updateFilter('featured', e.target.checked ? 'true' : '')}
                 />
-                <span>Featured Only</span>
+                <span>{t('shop.featuredOnly')}</span>
               </label>
             </div>
           </aside>
@@ -192,8 +214,8 @@ function ShopContent() {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
                 </svg>
-                <h3>No products found</h3>
-                <p>Try adjusting your filters</p>
+                <h3>{t('shop.noProducts')}</h3>
+                <p>{t('shop.noProductsDesc')}</p>
               </div>
             ) : (
               <div className="grid grid-3">

@@ -2,8 +2,10 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
+import { useTranslation } from '@/context/LanguageContext';
 
 export default function StockManagement() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const toast = useToast();
   const [stockList, setStockList] = useState([]);
@@ -29,7 +31,7 @@ export default function StockManagement() {
   }, [user]);
 
   if (user?.role !== 'admin') {
-    return <div className="card p-6">Access Denied</div>;
+    return <div className="card p-6">{t('dashboard.accessDenied')}</div>;
   }
 
   const handleQuantityChange = (id, newQuantity) => {
@@ -56,7 +58,7 @@ export default function StockManagement() {
       });
       if (!res.ok) throw new Error('Failed to update stock');
       
-      toast.success('Stock updated successfully');
+      toast.success(t('dashboard.stockUpdated'));
       setEditedStock({});
       
       // Update local state
@@ -78,13 +80,13 @@ export default function StockManagement() {
   return (
     <div className="card p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="heading-display heading-3">Stock Management</h1>
+        <h1 className="heading-display heading-3">{t('dashboard.stockManagement')}</h1>
         <button 
           className="btn btn-primary" 
           onClick={handleSave} 
           disabled={saving || Object.keys(editedStock).length === 0}
         >
-          {saving ? 'Saving...' : 'Save Changes'}
+          {saving ? t('dashboard.savingChanges') : t('dashboard.saveChanges')}
         </button>
       </div>
 
@@ -92,11 +94,11 @@ export default function StockManagement() {
         <table className="table" style={{ width: '100%', minWidth: '800px' }}>
           <thead>
             <tr>
-              <th className="text-left py-4 border-b">Product</th>
-              <th className="text-left py-4 border-b">Size</th>
-              <th className="text-left py-4 border-b">Current Stock</th>
-              <th className="text-left py-4 border-b">Status</th>
-              <th className="text-left py-4 border-b" style={{ width: '150px' }}>Edit Quantity</th>
+              <th className="text-left py-4 border-b">{t('admin.products')}</th>
+              <th className="text-left py-4 border-b">{t('common.size')}</th>
+              <th className="text-left py-4 border-b">{t('dashboard.currentStock')}</th>
+              <th className="text-left py-4 border-b">{t('common.status')}</th>
+              <th className="text-left py-4 border-b" style={{ width: '150px' }}>{t('dashboard.editQuantity')}</th>
             </tr>
           </thead>
           <tbody>
@@ -105,11 +107,11 @@ export default function StockManagement() {
               
               let statusBadge;
               if (displayQuantity === 0) {
-                statusBadge = <span className="badge badge-error">Out of Stock</span>;
+                statusBadge = <span className="badge badge-error">{t('product.outOfStock')}</span>;
               } else if (displayQuantity < 10) {
-                statusBadge = <span className="badge badge-warning" style={{ backgroundColor: '#f59e0b', color: '#fff' }}>Low Stock</span>;
+                statusBadge = <span className="badge badge-warning" style={{ backgroundColor: '#f59e0b', color: '#fff' }}>{t('product.lowStock')}</span>;
               } else {
-                statusBadge = <span className="badge badge-success">Available</span>;
+                statusBadge = <span className="badge badge-success">{t('product.available')}</span>;
               }
 
               return (
@@ -145,7 +147,7 @@ export default function StockManagement() {
             {stockList.length === 0 && (
               <tr>
                 <td colSpan="5" className="py-8 text-center text-muted">
-                  No stock records found.
+                  {t('dashboard.noStockRecords')}
                 </td>
               </tr>
             )}

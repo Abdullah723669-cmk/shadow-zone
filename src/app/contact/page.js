@@ -1,30 +1,32 @@
 'use client';
 import { useState } from 'react';
 import { useToast } from '@/context/ToastContext';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from './contact.module.css';
-
-const INFO = [
-  { icon: '📍', title: 'Visit Us', lines: ['123 Fashion Street, Gulshan-2', 'Dhaka 1212, Bangladesh'] },
-  { icon: '📞', title: 'Call Us', lines: ['+880 1700-000000', '+880 1800-000000'] },
-  { icon: '✉️', title: 'Email Us', lines: ['support@shadowzone.com', 'hello@shadowzone.com'] },
-  { icon: '🕐', title: 'Business Hours', lines: ['Sat - Thu: 10AM - 8PM', 'Friday: Closed'] },
-];
 
 export default function ContactPage() {
   const toast = useToast();
+  const { t } = useTranslation();
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [loading, setLoading] = useState(false);
+
+  const INFO = [
+    { icon: '📍', title: t('contact.visitUs'), lines: ['123 Fashion Street, Gulshan-2', 'Dhaka 1212, Bangladesh'] },
+    { icon: '📞', title: t('contact.callUs'), lines: ['+880 1700-000000', '+880 1800-000000'] },
+    { icon: '✉️', title: t('contact.emailUs'), lines: ['support@shadowzone.com', 'hello@shadowzone.com'] },
+    { icon: '🕐', title: t('contact.businessHours'), lines: ['Sat - Thu: 10AM - 8PM', 'Friday: Closed'] },
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('contact.fillRequired'));
       return;
     }
     setLoading(true);
     // Simulate send
     await new Promise(r => setTimeout(r, 1500));
-    toast.success('Message sent successfully! We\'ll get back to you soon.');
+    toast.success(t('contact.messageSentSuccess'));
     setForm({ name: '', email: '', subject: '', message: '' });
     setLoading(false);
   };
@@ -37,12 +39,12 @@ export default function ContactPage() {
       <section className={styles.hero}>
         <div className={styles.heroGlow} />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <span className={styles.eyebrow}>Get in Touch</span>
+          <span className={styles.eyebrow}>{t('contact.getInTouch')}</span>
           <h1 className="heading-display heading-1">
-            We&apos;d Love to <span className="text-gradient">Hear From You</span>
+            {t('contact.heroTitle').split('Hear From You')[0]}<span className="text-gradient">Hear From You</span>
           </h1>
           <p className={styles.heroDesc}>
-            Have a question, feedback, or want to collaborate? Drop us a message and our team will respond within 24 hours.
+            {t('contact.heroDesc')}
           </p>
         </div>
       </section>
@@ -70,31 +72,31 @@ export default function ContactPage() {
           <div className={styles.formGrid}>
             {/* Contact Form */}
             <div className={styles.formCard}>
-              <h2 className="heading-display heading-3 mb-2">Send a Message</h2>
-              <p className="text-muted text-sm mb-6">Fill out the form and we&apos;ll respond promptly.</p>
+              <h2 className="heading-display heading-3 mb-2">{t('contact.sendAMessage')}</h2>
+              <p className="text-muted text-sm mb-6">{t('contact.formDesc')}</p>
               <form onSubmit={handleSubmit} className={styles.form}>
                 <div className={styles.formRow}>
                   <div className="input-group">
-                    <label>Full Name *</label>
+                    <label>{t('contact.fullName')} *</label>
                     <input className="input" placeholder="John Doe" value={form.name} onChange={update('name')} required />
                   </div>
                   <div className="input-group">
-                    <label>Email *</label>
+                    <label>{t('contact.email')} *</label>
                     <input className="input" type="email" placeholder="your@email.com" value={form.email} onChange={update('email')} required />
                   </div>
                 </div>
                 <div className="input-group">
-                  <label>Subject</label>
+                  <label>{t('contact.subject')}</label>
                   <input className="input" placeholder="How can we help?" value={form.subject} onChange={update('subject')} />
                 </div>
                 <div className="input-group">
-                  <label>Message *</label>
+                  <label>{t('contact.message')} *</label>
                   <textarea className="input" rows={5} placeholder="Tell us more..." value={form.message} onChange={update('message')} required />
                 </div>
                 <button type="submit" className="btn btn-primary btn-lg w-full" disabled={loading}>
                   {loading ? <span className="spinner" /> : (
                     <>
-                      Send Message
+                      {t('contact.sendMessage')}
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m22 2-7 20-4-9-9-4z"/><path d="m22 2-10 10"/></svg>
                     </>
                   )}
@@ -120,7 +122,7 @@ export default function ContactPage() {
                 <div className={styles.mapBadge}>
                   <span>📍</span>
                   <div>
-                    <p className="font-semibold text-sm">Shadow Zone HQ</p>
+                    <p className="font-semibold text-sm">{t('contact.shadowZoneHQ')}</p>
                     <p className="text-xs text-muted">Gulshan-2, Dhaka</p>
                   </div>
                 </div>
@@ -134,12 +136,12 @@ export default function ContactPage() {
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container" style={{ maxWidth: 800 }}>
           <div className={styles.sectionHeader}>
-            <h2 className="heading-display heading-2">Frequently <span className="text-gradient">Asked</span></h2>
+            <h2 className="heading-display heading-2">{t('contact.faq').split('Asked')[0]}<span className="text-gradient">Asked</span></h2>
           </div>
           {[
             { q: 'What are your delivery timelines?', a: 'We deliver within Dhaka in 1-2 business days, and outside Dhaka in 3-5 business days.' },
             { q: 'Do you offer cash on delivery?', a: 'Yes! We accept Cash on Delivery (COD), bKash, and card payments for your convenience.' },
-            { q: 'What is your return policy?', a: 'We offer a 7-day easy return policy. If the product doesn\'t fit or has defects, we\'ll arrange a free pickup.' },
+            { q: 'What is your return policy?', a: 'We offer a 7-day easy return policy. If the product doesn\'t fit or has defects, we\'ll arrange a easy pickup.' },
             { q: 'Can I track my order?', a: 'Absolutely! Once your order is shipped, you\'ll receive tracking details via email and your dashboard.' },
           ].map((faq, i) => (
             <details key={i} className={styles.faqItem}>

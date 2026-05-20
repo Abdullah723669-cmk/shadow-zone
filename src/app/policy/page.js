@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import styles from './policy.module.css';
+import { useTranslation } from '@/context/LanguageContext';
 
 const POLICIES = [
   {
@@ -61,7 +62,19 @@ const POLICIES = [
 ];
 
 export default function PolicyPage() {
+  const { t } = useTranslation();
   const [activePolicy, setActivePolicy] = useState('privacy');
+  
+  const getPolicyTitle = (id) => {
+    switch (id) {
+      case 'privacy': return t('policy.privacyPolicy');
+      case 'terms': return t('policy.termsConditions');
+      case 'returns': return t('policy.returnRefund');
+      case 'shipping': return t('policy.shippingPolicy');
+      default: return '';
+    }
+  };
+
   const current = POLICIES.find(p => p.id === activePolicy);
 
   return (
@@ -70,12 +83,12 @@ export default function PolicyPage() {
       <section className={styles.hero}>
         <div className={styles.heroGlow} />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <span className={styles.eyebrow}>Legal & Policies</span>
+          <span className={styles.eyebrow}>{t('policy.legalPolicies')}</span>
           <h1 className="heading-display heading-1">
-            Our <span className="text-gradient">Policies</span>
+            {t('policy.ourPolicies').split(' ')[0]} <span className="text-gradient">{t('policy.ourPolicies').split(' ').slice(1).join(' ')}</span>
           </h1>
           <p className={styles.heroDesc}>
-            Transparency is at the core of everything we do. Read our policies to understand how we protect your data and serve you.
+            {t('policy.heroDesc')}
           </p>
         </div>
       </section>
@@ -94,8 +107,8 @@ export default function PolicyPage() {
                 >
                   <span className={styles.navIcon}>{p.icon}</span>
                   <div>
-                    <p className={styles.navTitle}>{p.title}</p>
-                    <p className={styles.navDate}>Updated {p.updated}</p>
+                    <p className={styles.navTitle}>{getPolicyTitle(p.id)}</p>
+                    <p className={styles.navDate}>{t('policy.updatedOn')} {p.updated}</p>
                   </div>
                 </button>
               ))}
@@ -106,8 +119,8 @@ export default function PolicyPage() {
               <div className={styles.contentHeader}>
                 <span className={styles.contentIcon}>{current.icon}</span>
                 <div>
-                  <h2 className="heading-display heading-2">{current.title}</h2>
-                  <p className="text-sm text-muted mt-1">Last updated: {current.updated}</p>
+                  <h2 className="heading-display heading-2">{getPolicyTitle(current.id)}</h2>
+                  <p className="text-sm text-muted mt-1">{t('policy.lastUpdated')}: {current.updated}</p>
                 </div>
               </div>
 
@@ -126,9 +139,9 @@ export default function PolicyPage() {
               {/* Contact CTA */}
               <div className={styles.cta}>
                 <div className={styles.ctaInner}>
-                  <p className="font-semibold">Have questions about our policies?</p>
-                  <p className="text-sm text-muted mt-1">Our support team is happy to help.</p>
-                  <a href="/contact" className="btn btn-primary btn-sm mt-4">Contact Support</a>
+                  <p className="font-semibold">{t('policy.haveQuestions')}</p>
+                  <p className="text-sm text-muted mt-1">{t('policy.supportTeam')}</p>
+                  <a href="/contact" className="btn btn-primary btn-sm mt-4">{t('policy.contactSupport')}</a>
                 </div>
               </div>
             </div>

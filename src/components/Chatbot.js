@@ -1,11 +1,13 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from './Chatbot.module.css';
 
 export default function Chatbot() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Hi there! I am Shadow, your personal shopping assistant. How can I help you today?' }
+    { role: 'assistant', content: t('chatbot.greeting') }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -37,11 +39,11 @@ export default function Chatbot() {
       if (data.reply) {
         setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
       } else {
-        setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I am having trouble connecting right now.' }]);
+        setMessages(prev => [...prev, { role: 'assistant', content: t('chatbot.connectionError') }]);
       }
     } catch (err) {
       console.error(err);
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Oops! Something went wrong.' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: t('chatbot.somethingWentWrong') }]);
     } finally {
       setLoading(false);
     }
@@ -52,9 +54,9 @@ export default function Chatbot() {
   };
 
   const quickQuestions = [
-    'What is your return policy?',
-    'Any discount offers today?',
-    'What products do you have?'
+    t('chatbot.quickQ1'),
+    t('chatbot.quickQ2'),
+    t('chatbot.quickQ3')
   ];
 
   return (
@@ -63,7 +65,7 @@ export default function Chatbot() {
       <button 
         className={styles.toggleBtn} 
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle Chatbot"
+        aria-label={t('chatbot.toggleChatbot')}
       >
         {isOpen ? (
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -87,7 +89,7 @@ export default function Chatbot() {
             </div>
             <div>
               <h3 className={styles.title}>Shadow</h3>
-              <p className={styles.subtitle}>AI Shop Assistant • Online</p>
+              <p className={styles.subtitle}>{t('chatbot.subtitle')}</p>
             </div>
           </div>
 
@@ -133,7 +135,7 @@ export default function Chatbot() {
             <input 
               type="text" 
               className={styles.input} 
-              placeholder="Ask anything..." 
+              placeholder={t('chatbot.placeholder')} 
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyPress}

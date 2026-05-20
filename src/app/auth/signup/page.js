@@ -4,9 +4,11 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from '../auth.module.css';
 
 export default function SignupPage() {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '', phone: '' });
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
@@ -16,17 +18,17 @@ export default function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error(t('auth.passwordMismatch'));
       return;
     }
     if (form.password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      toast.error(t('auth.passwordMinLength'));
       return;
     }
     setLoading(true);
     try {
       await signup(form.name, form.email, form.password, form.phone);
-      toast.success('Account created! Welcome to Shadow Zone.');
+      toast.success(t('auth.accountCreated'));
       router.push('/');
     } catch (err) {
       toast.error(err.message);
@@ -43,40 +45,40 @@ export default function SignupPage() {
         <div className={styles.card}>
           <div className={styles.header}>
             <Link href="/" className={styles.logo}>Shadow Zone</Link>
-            <h1>Create Account</h1>
-            <p>Join the Shadow Zone family</p>
+            <h1>{t('auth.signup')}</h1>
+            <p>{t('auth.joinFamily')}</p>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className="input-group">
-              <label htmlFor="name">Full Name</label>
+              <label htmlFor="name">{t('auth.firstName')}</label>
               <input id="name" type="text" className="input" placeholder="John Doe" value={form.name} onChange={update('name')} required />
             </div>
             <div className="input-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">{t('common.email')}</label>
               <input id="email" type="email" className="input" placeholder="your@email.com" value={form.email} onChange={update('email')} required />
             </div>
             <div className="input-group">
-              <label htmlFor="phone">Phone (optional)</label>
+              <label htmlFor="phone">{t('auth.phone')} ({t('common.optional')})</label>
               <input id="phone" type="tel" className="input" placeholder="+880 1XXX XXXXXX" value={form.phone} onChange={update('phone')} />
             </div>
             <div className={styles.row}>
               <div className="input-group">
-                <label htmlFor="password">Password</label>
-                <input id="password" type="password" className="input" placeholder="Min 6 characters" value={form.password} onChange={update('password')} required />
+                <label htmlFor="password">{t('auth.password')}</label>
+                <input id="password" type="password" className="input" placeholder={t('auth.passwordMinLength')} value={form.password} onChange={update('password')} required />
               </div>
               <div className="input-group">
-                <label htmlFor="confirmPassword">Confirm</label>
-                <input id="confirmPassword" type="password" className="input" placeholder="Repeat password" value={form.confirmPassword} onChange={update('confirmPassword')} required />
+                <label htmlFor="confirmPassword">{t('auth.confirmPassword')}</label>
+                <input id="confirmPassword" type="password" className="input" placeholder={t('auth.repeatPassword')} value={form.confirmPassword} onChange={update('confirmPassword')} required />
               </div>
             </div>
             <button type="submit" className="btn btn-primary w-full" disabled={loading}>
-              {loading ? <span className="spinner" /> : 'Create Account'}
+              {loading ? <span className="spinner" /> : t('auth.signup')}
             </button>
           </form>
 
           <p className={styles.switch}>
-            Already have an account? <Link href="/auth/login">Sign in</Link>
+            {t('auth.alreadyHaveAccount')} <Link href="/auth/login">{t('auth.loginNow')}</Link>
           </p>
         </div>
       </div>

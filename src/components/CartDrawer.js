@@ -2,11 +2,13 @@
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from './CartDrawer.module.css';
 
 export default function CartDrawer() {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalItems, totalPrice, clearCart } = useCart();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const router = useRouter();
 
   const handleCheckout = () => {
@@ -25,7 +27,7 @@ export default function CartDrawer() {
       <div className={styles.overlay} onClick={() => setIsOpen(false)} />
       <div className={styles.drawer}>
         <div className={styles.header}>
-          <h3>Shopping Bag ({totalItems})</h3>
+          <h3>{t('cart.title')} ({totalItems})</h3>
           <button onClick={() => setIsOpen(false)} className={styles.closeBtn}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
@@ -39,9 +41,9 @@ export default function CartDrawer() {
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ opacity: 0.3 }}>
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
               </svg>
-              <p>Your bag is empty</p>
+              <p>{t('cart.empty')}</p>
               <button className="btn btn-secondary btn-sm mt-4" onClick={() => { setIsOpen(false); router.push('/shop'); }}>
-                Start Shopping
+                {t('cart.continueShopping')}
               </button>
             </div>
           ) : (
@@ -52,7 +54,7 @@ export default function CartDrawer() {
                 </div>
                 <div className={styles.itemInfo}>
                   <p className={styles.itemName}>{item.name}</p>
-                  {item.size && <p className="text-xs text-muted">Size: {item.size}</p>}
+                  {item.size && <p className="text-xs text-muted">{t('common.size')}: {item.size}</p>}
                   <p className="price" style={{ fontSize: '0.9rem' }}>৳{item.price.toLocaleString()}</p>
                   <div className={styles.itemActions}>
                     <div className="qty-control">
@@ -75,14 +77,14 @@ export default function CartDrawer() {
         {items.length > 0 && (
           <div className={styles.footer}>
             <div className={styles.subtotal}>
-              <span>Subtotal</span>
+              <span>{t('cart.subtotal')}</span>
               <span className="price" style={{ fontSize: '1.1rem' }}>৳{totalPrice.toLocaleString()}</span>
             </div>
             <button className="btn btn-primary w-full" onClick={handleCheckout}>
-              Proceed to Checkout
+              {t('checkout.completeOrder')}
             </button>
             <button className="btn btn-secondary w-full btn-sm" onClick={clearCart}>
-              Clear Bag
+              {t('common.cancel')}
             </button>
           </div>
         )}

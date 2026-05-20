@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from './blog.module.css';
 
 const BLOG_POSTS = [
@@ -86,10 +87,20 @@ const BLOG_POSTS = [
   },
 ];
 
-const CATEGORIES = ['All', 'Trends', 'Sustainability', 'Guide', "Men's Fashion", "Women's Fashion", 'Tips', 'Seasonal'];
-
 export default function BlogPage() {
+  const { t } = useTranslation();
   const [activeCategory, setActiveCategory] = useState('All');
+
+  const CATEGORIES = [
+    { value: 'All', label: t('shop.all') },
+    { value: 'Trends', label: 'Trends' },
+    { value: 'Sustainability', label: 'Sustainability' },
+    { value: 'Guide', label: 'Guide' },
+    { value: 'Men\'s Fashion', label: 'Men\'s Fashion' },
+    { value: 'Women\'s Fashion', label: 'Women\'s Fashion' },
+    { value: 'Tips', label: 'Tips' },
+    { value: 'Seasonal', label: 'Seasonal' }
+  ];
 
   const featured = BLOG_POSTS.filter(p => p.featured);
   const filtered = activeCategory === 'All'
@@ -102,12 +113,12 @@ export default function BlogPage() {
       <section className={styles.hero}>
         <div className={styles.heroGlow} />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <span className={styles.eyebrow}>Shadow Zone Blog</span>
+          <span className={styles.eyebrow}>Shadow Zone {t('blog.title')}</span>
           <h1 className="heading-display heading-1">
             Style Tips & <span className="text-gradient">Fashion Stories</span>
           </h1>
           <p className={styles.heroDesc}>
-            Stay ahead of the curve with expert fashion advice, behind-the-scenes stories, and the latest trends from the Shadow Zone team.
+            {t('blog.heroTitle')}
           </p>
         </div>
       </section>
@@ -130,7 +141,7 @@ export default function BlogPage() {
                   <h2 className={styles.featuredTitle}>{post.title}</h2>
                   <p className={styles.featuredExcerpt}>{post.excerpt}</p>
                   <Link href={`/blog/${post.id}`} className="btn btn-primary btn-sm" style={{ width: 'fit-content' }}>
-                    Read Article
+                    {t('blog.readArticle')}
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                   </Link>
                 </div>
@@ -144,18 +155,18 @@ export default function BlogPage() {
       <section className="section">
         <div className="container">
           <div className={styles.sectionHeader}>
-            <h2 className="heading-display heading-2">All <span className="text-gradient">Articles</span></h2>
+            <h2 className="heading-display heading-2">{t('blog.allArticles').split('Articles')[0]}<span className="text-gradient">Articles</span></h2>
           </div>
 
           {/* Category Tabs */}
           <div className={styles.catTabs}>
             {CATEGORIES.map(cat => (
               <button
-                key={cat}
-                className={`${styles.catTab} ${activeCategory === cat ? styles.catTabActive : ''}`}
-                onClick={() => setActiveCategory(cat)}
+                key={cat.value}
+                className={`${styles.catTab} ${activeCategory === cat.value ? styles.catTabActive : ''}`}
+                onClick={() => setActiveCategory(cat.value)}
               >
-                {cat}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -176,7 +187,7 @@ export default function BlogPage() {
                   <div className={styles.postFooter}>
                     <span className="text-xs text-muted">{post.date}</span>
                     <Link href={`/blog/${post.id}`} className={styles.readMore}>
-                      Read more
+                      {t('blog.readMore')}
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                     </Link>
                   </div>
@@ -187,8 +198,8 @@ export default function BlogPage() {
 
           {filtered.length === 0 && (
             <div className="empty-state" style={{ padding: 60 }}>
-              <h3>No articles in this category yet</h3>
-              <p className="mt-2 text-muted">Check back soon for new content!</p>
+              <h3>{t('blog.noArticlesInCategory')}</h3>
+              <p className="mt-2 text-muted">{t('blog.checkBackSoon')}</p>
             </div>
           )}
         </div>
@@ -197,11 +208,11 @@ export default function BlogPage() {
       {/* Newsletter CTA */}
       <section className={styles.newsletter}>
         <div className="container" style={{ maxWidth: 600, textAlign: 'center' }}>
-          <h2 className="heading-display heading-2">Stay in the <span className="text-gradient">Loop</span></h2>
-          <p className="text-secondary mt-2 mb-6">Get the latest fashion tips and exclusive offers delivered to your inbox.</p>
+          <h2 className="heading-display heading-2">{t('blog.stayInLoop').split('Loop')[0]}<span className="text-gradient">Loop</span></h2>
+          <p className="text-secondary mt-2 mb-6">{t('blog.newsletterDesc')}</p>
           <form className={styles.nlForm} onSubmit={e => e.preventDefault()}>
-            <input className="input" type="email" placeholder="Enter your email" style={{ flex: 1 }} />
-            <button className="btn btn-primary">Subscribe</button>
+            <input className="input" type="email" placeholder={t('blog.enterEmail')} style={{ flex: 1 }} />
+            <button className="btn btn-primary">{t('blog.subscribe')}</button>
           </form>
         </div>
       </section>

@@ -1,7 +1,11 @@
+'use client';
 import Link from 'next/link';
+import { useTranslation } from '@/context/LanguageContext';
 import styles from './Footer.module.css';
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className={styles.footer}>
       <div className={styles.glow} />
@@ -10,8 +14,7 @@ export default function Footer() {
           <div className={styles.brand}>
             <h3 className={styles.logo}>Shadow Zone</h3>
             <p className={styles.desc}>
-              Premium readymade garments for Men, Ladies & Kids. 
-              Quality fashion at your doorstep.
+              {t('footer.description')}
             </p>
             <div className={styles.socials}>
               <a href="#" className={styles.socialBtn} aria-label="Facebook">
@@ -27,33 +30,33 @@ export default function Footer() {
           </div>
 
           <div className={styles.column}>
-            <h4>Shop</h4>
-            <Link href="/shop?category=Mens">Men&apos;s Collection</Link>
-            <Link href="/shop?category=Ladies">Ladies Collection</Link>
-            <Link href="/shop?category=Kids">Kids Collection</Link>
-            <Link href="/shop">All Products</Link>
+            <h4>{t('navbar.shop')}</h4>
+            <Link href="/shop?category=Mens">{t('shop.mens')}</Link>
+            <Link href="/shop?category=Ladies">{t('shop.ladies')}</Link>
+            <Link href="/shop?category=Kids">{t('shop.kids')}</Link>
+            <Link href="/shop">{t('common.viewAll')}</Link>
           </div>
 
           <div className={styles.column}>
-            <h4>Account</h4>
-            <Link href="/auth/login">Sign In</Link>
-            <Link href="/auth/signup">Create Account</Link>
-            <Link href="/dashboard">My Dashboard</Link>
-            <Link href="/dashboard/orders">Order History</Link>
+            <h4>{t('footer.account')}</h4>
+            <Link href="/auth/login">{t('common.login')}</Link>
+            <Link href="/auth/signup">{t('common.signup')}</Link>
+            <Link href="/dashboard">{t('navbar.dashboard')}</Link>
+            <Link href="/dashboard/orders">{t('navbar.myOrders')}</Link>
           </div>
 
           <div className={styles.column}>
-            <h4>Company</h4>
-            <Link href="/about">About Us</Link>
-            <Link href="/contact">Contact Us</Link>
-            <Link href="/blog">Blog</Link>
-            <Link href="/policy">Policies</Link>
+            <h4>{t('footer.company')}</h4>
+            <Link href="/about">{t('navbar.about')}</Link>
+            <Link href="/contact">{t('navbar.contact')}</Link>
+            <Link href="/blog">{t('navbar.blog')}</Link>
+            <Link href="/policy">{t('footer.policy')}</Link>
           </div>
         </div>
 
         <div className={styles.bottom}>
-          <p>© {new Date().getFullYear()} Shadow Zone. All rights reserved.</p>
-          <p className={styles.credit}>Crafted with ♥ in Bangladesh</p>
+          <p>{t('footer.copyright').replace('2025', new Date().getFullYear())}</p>
+          <p className={styles.credit}>{t('footer.madeIn')}</p>
         </div>
       </div>
     </footer>
